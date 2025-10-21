@@ -325,13 +325,19 @@ const final_preferences = {
   `,
   button_label: "Finish",
   data: { task: "final_wrapup" },
-  on_finish: d => {
-    const r = JSON.parse(d.responses);
-    d.preferred_set = r.preferred_set;
-    d.order_helpful = Number(r.order_helpful);
-  }
-};
+  };
 
+// thank you page
+const thanks= {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <h2>Thank you!</h2>
+    <p>Your responses have been recorded.</p>
+    <p><b>Confidentiality:</b> All responses will remain confidential.</p>
+  `,
+  choices: ['Finish'],
+  data: {task:'debrief'}
+};
 
     // KEEP UDATING AS EVERY SECTION IS ADDED
   const timeline = [
@@ -341,11 +347,9 @@ const final_preferences = {
   block6,
   block12,
   block24,
-  final_preferences
+  final_preferences,
+  thanks
 ];
-
-
   
-
   // ✅ Run experiment
   jsPsych.run(timeline);
