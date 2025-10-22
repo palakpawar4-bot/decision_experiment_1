@@ -1,9 +1,6 @@
 // Initialize jsPsych
-const jsPsych = initJsPsych({
-  on_finish: function() {
-    jsPsych.data.displayData();
-  }
-});
+
+  
 
 // Define welcome/instructions page
 const welcome_instructions = {
@@ -339,7 +336,75 @@ const thanks= {
   data: {task:'debrief'}
 };
 
-    // KEEP UDATING AS EVERY SECTION IS ADDED
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNodlTwnbOAwK7sCu7vNjsdohQo3g3WPzagNZI9ATJulyFskwZ5T_ONyKF8_vuw-9CSQ/exec';
+
+async function sendResultsToSheet(payload) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    console.log('Sheet response:', json);
+    return json;
+  } catch (err) {
+    console.error('Failed to send results to sheet', err);
+    return { status: 'error', message: err.toString() };
+  }
+}
+
+function getParticipantFromDemographics() {
+  const demoRow = jsPsych.data.get().filter({ task: 'demographics' }).values()[0];
+  if (!demoRow) return '';
+  const resp = demoRow.response || demoRow.responses || {};
+  // your demographics form uses name="name"
+  return resp.name || resp.participant || '';
+}
+
+async function finishAndSave() {
+  const payload = {
+    participant: getParticipantFromDemographics(),
+    // send structured data (array of trial result objects)
+    data: jsPsych.data.get().values()
+  };
+
+  // show a small saving overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'saving-overlay';
+  overlay.style = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;z-index:9999';
+  overlay.innerHTML = '<div style="background:#222;padding:18px;border-radius:6px;">Saving your responses... Please wait</div>';
+  document.body.appendChild(overlay);
+
+  // try sending once, if fails allow one retry
+  let result = await sendResultsToSheet(payload);
+  if (!result || result.status !== 'success') {
+    console.warn('Initial save failed, retrying...');
+    await new Promise(r => setTimeout(r, 1000));
+    result = await sendResultsToSheet(payload);
+  }
+
+  document.body.removeChild(overlay);
+
+  if (result && result.status === 'success') {
+    console.log('Save successful.');
+    jsPsych.data.displayData();
+  } else {
+    console.error('Save failed after retry:', result);
+    // optional: persist to localStorage so researcher can retrieve
+    try {
+      localStorage.setItem('pending_experiment_data', JSON.stringify(payload.data));
+      alert('Saving failed. Responses were saved locally and will be retried later. Please contact the researcher if problems persist.');
+    } catch (e) {
+      alert('Saving failed and local save also failed. Please contact the researcher.');
+    }
+  }
+}
+
+// KEEP UDATING AS EVERY SECTION IS ADDED
   const timeline = [
   welcome_instructions,
   demographics,
@@ -350,6 +415,15 @@ const thanks= {
   final_preferences,
   thanks
 ];
-  
+
+// Single, final init (assign the instance)
+const jsPsych = initJsPsych({
+  timeline: timeline,
+  on_finish: async function() {
+    await finishAndSave();
+  }
+});
+
+
   // ✅ Run experiment
   jsPsych.run(timeline);
