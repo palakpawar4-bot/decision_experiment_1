@@ -324,15 +324,8 @@ const final_preferences = {
   data: { task: "final_wrapup" },
   };
 
-
-  // Proxy configuration
-  // If you have deployed the proxy (server.js) publicly, set PROXY_URL to its '/save' endpoint, e.g.
-  // const PROXY_URL = 'https://my-proxy.vercel.app/save';
-  // If PROXY_URL is null, the client will attempt to POST to a same-origin '/save' path (useful when running the local proxy).
-  const PROXY_URL = null; // <-- replace with your deployed proxy URL if you have one
-
-  // Use the deployed proxy if configured, otherwise assume same-origin proxy path
-  const APPS_SCRIPT_URL = PROXY_URL || (window.location.origin + '/save');
+const PROXY_URL = 'https://decisionexperiment2-hpzuhh4fk-palak-pawars-projects.vercel.app/api/save';
+const APPS_SCRIPT_URL = PROXY_URL || (window.location.origin + '/save');
 
 async function sendResultsToSheet(payload) {
   try {

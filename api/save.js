@@ -4,7 +4,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi1JoHdEkcJE_i
 module.exports = async (req, res) => {
   // handle preflight
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'https://palakpawar4-bot.github.io/');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).send('ok');
