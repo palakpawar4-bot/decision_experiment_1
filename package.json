@@ -1,0 +1,25 @@
+{
+  "name": "decision_experiment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "experiment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palakpawar4-bot/decision_experiment_1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/palakpawar4-bot/decision_experiment_1/issues"
+  },
+  "homepage": "https://github.com/palakpawar4-bot/decision_experiment_1#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-fetch": "^2.7.0"
+  }
+}

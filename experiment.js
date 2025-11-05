@@ -325,7 +325,10 @@ const final_preferences = {
   };
 
 
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNodlTwnbOAwK7sCu7vNjsdohQo3g3WPzagNZI9ATJulyFskwZ5T_ONyKF8_vuw-9CSQ/exec';
+  // Use the local proxy endpoint when serving via the proxy (e.g. http://localhost:3000)
+  // This forwards requests server-side to the Apps Script and avoids CORS issues.
+  // If you later remove the proxy, replace this value with your Apps Script /exec URL.
+  const APPS_SCRIPT_URL = window.location.origin + '/save';
 
 async function sendResultsToSheet(payload) {
   try {
@@ -380,7 +383,6 @@ async function finishAndSave() {
 
   if (result && result.status === 'success') {
     console.log('Save successful.');
-    jsPsych.data.displayData();
   } else {
     console.error('Save failed after retry:', result);
     // optional: persist to localStorage so researcher can retrieve
@@ -402,8 +404,7 @@ async function finishAndSave() {
   block6,
   block12,
   block24,
-  final_preferences
-];
+  final_preferences];
 
 // Single, final init (assign the instance)
 const jsPsych = initJsPsych({
