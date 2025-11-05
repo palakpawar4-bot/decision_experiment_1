@@ -325,7 +325,7 @@ const final_preferences = {
   };
 
 
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNodlTwnbOAwK7sCu7vNjsdohQo3g3WPzagNZI9ATJulyFskwZ5T_ONyKF8_vuw-9CSQ/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi1JoHdEkcJE_iuU9IzJ0o-7IjcKqJKetbmSuoGCfL5Q9L-5F41r0ZRIlvEUjduHEsZg/exec';
 
 async function sendResultsToSheet(payload) {
   try {
