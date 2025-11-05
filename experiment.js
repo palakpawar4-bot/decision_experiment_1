@@ -324,17 +324,6 @@ const final_preferences = {
   data: { task: "final_wrapup" },
   };
 
-// thank you page
-const thanks= {
-  type: jsPsychHtmlButtonResponse,
-  stimulus: `
-    <h2>Thank you!</h2>
-    <p>Your responses have been recorded.</p>
-    <p><b>Confidentiality:</b> All responses will remain confidential.</p>
-  `,
-  choices: ['Finish'],
-  data: {task:'debrief'}
-};
 
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNodlTwnbOAwK7sCu7vNjsdohQo3g3WPzagNZI9ATJulyFskwZ5T_ONyKF8_vuw-9CSQ/exec';
 
@@ -404,6 +393,7 @@ async function finishAndSave() {
   }
 }
 
+
 // KEEP UDATING AS EVERY SECTION IS ADDED
   const timeline = [
   welcome_instructions,
@@ -412,8 +402,7 @@ async function finishAndSave() {
   block6,
   block12,
   block24,
-  final_preferences,
-  thanks
+  final_preferences
 ];
 
 // Single, final init (assign the instance)
