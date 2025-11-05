@@ -1,13 +1,14 @@
 // api/save.js (Vercel serverless function)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi1JoHdEkcJE_iuU9IzJ0o-7IjcKqJKetbmSuoGCfL5Q9L-5F41r0ZRIlvEUjduHEsZg/exec'; // replace
+// Reads APPS_SCRIPT_URL from environment if available, otherwise falls back to the hard-coded URL.
+const APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxi1JoHdEkcJE_iuU9IzJ0o-7IjcKqJKetbmSuoGCfL5Q9L-5F41r0ZRIlvEUjduHEsZg/exec';
 
 module.exports = async (req, res) => {
-  // handle preflight
+  // CORS preflight
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', 'https://palakpawar4-bot.github.io/');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    return res.status(200).send('ok');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Shared-Key');
+    return res.status(200).end();
   }
 
   try {
@@ -19,7 +20,7 @@ module.exports = async (req, res) => {
       body: JSON.stringify(body)
     });
     const json = await fetchRes.json();
-    // allow browser to call this function from GitHub Pages
+    // allow browser to call this function from any origin (adjust if you want to restrict)
     res.setHeader('Access-Control-Allow-Origin', '*');
     return res.status(200).json(json);
   } catch (err) {
