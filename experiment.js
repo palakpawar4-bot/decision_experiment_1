@@ -325,10 +325,7 @@ const final_preferences = {
   };
 
 
-  // Use the local proxy endpoint when serving via the proxy (e.g. http://localhost:3000)
-  // This forwards requests server-side to the Apps Script and avoids CORS issues.
-  // If you later remove the proxy, replace this value with your Apps Script /exec URL.
-  const APPS_SCRIPT_URL = window.location.origin + '/save';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNodlTwnbOAwK7sCu7vNjsdohQo3g3WPzagNZI9ATJulyFskwZ5T_ONyKF8_vuw-9CSQ/exec';
 
 async function sendResultsToSheet(payload) {
   try {
