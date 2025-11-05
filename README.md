@@ -1,0 +1,1 @@
+This repository is for a decision-making experiment simulating a market for headphones. Respondents are a part of a randomised trial, where they might get the options based on their preferences or in a random order.
