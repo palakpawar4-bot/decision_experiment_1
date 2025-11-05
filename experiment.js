@@ -325,7 +325,14 @@ const final_preferences = {
   };
 
 
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxi1JoHdEkcJE_iuU9IzJ0o-7IjcKqJKetbmSuoGCfL5Q9L-5F41r0ZRIlvEUjduHEsZg/exec';
+  // Proxy configuration
+  // If you have deployed the proxy (server.js) publicly, set PROXY_URL to its '/save' endpoint, e.g.
+  // const PROXY_URL = 'https://my-proxy.vercel.app/save';
+  // If PROXY_URL is null, the client will attempt to POST to a same-origin '/save' path (useful when running the local proxy).
+  const PROXY_URL = null; // <-- replace with your deployed proxy URL if you have one
+
+  // Use the deployed proxy if configured, otherwise assume same-origin proxy path
+  const APPS_SCRIPT_URL = PROXY_URL || (window.location.origin + '/save');
 
 async function sendResultsToSheet(payload) {
   try {
