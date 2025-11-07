@@ -324,22 +324,35 @@ const final_preferences = {
   data: { task: "final_wrapup" },
   };
 
-const PROXY_URL = 'https://decisionexperiment2-hpzuhh4fk-palak-pawars-projects.vercel.app/api/save';
-const APPS_SCRIPT_URL = PROXY_URL || (window.location.origin + '/save');
+// Formspree endpoint: create a form on https://formspree.io and paste the endpoint below.
+// Example: const FORMSPREE_URL = 'https://formspree.io/f/your_id';
+const FORMSPREE_URL = 'https://formspree.io/f/mzzknqgn'; // Formspree endpoint provided by user
+const APPS_SCRIPT_URL = FORMSPREE_URL;
 
 async function sendResultsToSheet(payload) {
   try {
+    // Debug: log which URL we'll POST to and a short preview of the payload
+    try { console.log('DEBUG: sendResultsToSheet will POST to', APPS_SCRIPT_URL); } catch(e){}
+    try { console.log('DEBUG: payload keys', Object.keys(payload)); } catch(e){}
     const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ participant: payload.participant || '', data: payload.data || {} })
     });
-    const json = await res.json();
-    console.log('Sheet response:', json);
-    return json;
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Formspree returned error', res.status, text);
+      return { status: 'error', message: `HTTP ${res.status}: ${text}` };
+    }
+
+    const json = await res.json().catch(() => null);
+    console.log('Formspree response:', json || '(no json)');
+    return { status: 'success', response: json };
   } catch (err) {
     console.error('Failed to send results to sheet', err);
     return { status: 'error', message: err.toString() };
