@@ -389,12 +389,29 @@ async function finishAndSave() {
     result = await sendResultsToSheet(payload);
   }
 
-  document.body.removeChild(overlay);
-
+  // Do not remove the overlay here — wait until we decide success/failure so the UI
+  // isn't left blank by removing the only visible element.
   if (result && result.status === 'success') {
     console.log('Save successful.');
+    // remove the temporary overlay (if present) and show a persistent jsPsych thank-you
+    try { if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); } catch (e) {}
+    try {
+      jsPsych.endExperiment(`
+        <div style="text-align:center;padding:30px;">
+          <h2 style="color:#2e7d32;margin-bottom:6px;">Thank you — your response has been recorded</h2>
+          <p style="margin-top:8px;">You may now close this page.</p>
+        </div>
+      `);
+    } catch (e) {
+      // If jsPsych isn't available for some reason, fallback to a DOM message
+      const msg = document.createElement('div');
+      msg.innerHTML = '<h2>Thank you — your response has been recorded</h2><p>You may now close this page.</p>';
+      document.body.appendChild(msg);
+    }
   } else {
     console.error('Save failed after retry:', result);
+    // remove overlay before showing alerts so the UI isn't blocked
+    try { if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); } catch(e){}
     // optional: persist to localStorage so researcher can retrieve
     try {
       localStorage.setItem('pending_experiment_data', JSON.stringify(payload.data));
